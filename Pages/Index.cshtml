@@ -1,0 +1,37 @@
+﻿@page
+@model IndexModel
+@{
+  ViewData["Title"] = "Tennis Game";
+}
+
+<div id="tennis-score-view" class="row">
+  @await Component.InvokeAsync("TennisScore")
+</div>
+<div class="row">
+  <div class="col d-flex justify-content-center">
+    <button class="btn btn-primary" onclick="scorePlayer('player1')">Score Player1</button>
+  </div>
+  <div class="col d-flex justify-content-center">
+    <button class="btn btn-primary" onclick="scorePlayer('player2')">Score Player2</button>
+  </div>
+</div>
+@section Scripts{
+  <script>
+    async function scorePlayer(player) {
+      const response = await fetch(`/?handler=PlayerScored`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          player
+        }),
+      });
+      const partial = document.getElementById('tennis-score-view');
+      if(partial) {
+        partial.innerHTML = await response.text();
+      }
+    }
+
+  </script>
+}
